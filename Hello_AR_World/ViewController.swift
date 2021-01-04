@@ -10,9 +10,11 @@ import SceneKit
 import ARKit
 
 class ViewController: UIViewController, ARSCNViewDelegate {
-
+    @IBOutlet var button: UIButton!
     @IBOutlet var sceneView: ARSCNView!
     var sphere = SCNNode()
+    var buttonWasPressed = false
+    var earthImage = String()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +33,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        button.titleLabel?.text = "Switch Earth Map"
+        button.titleLabel?.textColor = .label
+        button.backgroundColor = .gray
+        button.layer.cornerRadius = 20
         // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
 
@@ -50,6 +56,20 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Pause the view's session
         sceneView.session.pause()
     }
+    @IBAction func buttonPressed(_ sender: Any) {
+        buttonWasPressed.toggle()
+        
+    }
+    
+    func switchEarthMap() ->String {
+        
+        if buttonWasPressed {
+            earthImage = "earthmap_geo"
+        } else {
+            earthImage = "earthmap"
+        }
+        return earthImage
+    }
     
     func drawPlane() {
         let plane = SCNNode(geometry: SCNPlane(width: 1, height: 1))
@@ -61,9 +81,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func drawSphereAtOrigin() {
-         sphere = SCNNode(geometry: SCNSphere(radius: 0.05))
-        let sphere2 = SCNNode(geometry: SCNSphere(radius: 0.10))
-        sphere.geometry?.firstMaterial?.diffuse.contents = UIImage(named:"earthmap")
+        sphere = SCNNode(geometry: SCNSphere(radius: 0.05))
+        sphere.geometry?.firstMaterial?.diffuse.contents = UIImage(named:"map")
         sphere.position = SCNVector3(0,0,0)
         sphere.eulerAngles = SCNVector3(0,23.degreesToRadians(),0)
         sceneView.scene.rootNode.addChildNode(sphere)
