@@ -12,6 +12,7 @@ import ARKit
 class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
+    var sphere = SCNNode()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +37,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Run the view's session
         sceneView.session.run(configuration)
         drawSphereAtOrigin()
+        drawOrbitingShip()
 //        drawBoxAt12oclockHigh()
 //        drawPyramid()
 //        drawPlane()
@@ -59,7 +61,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func drawSphereAtOrigin() {
-        let sphere = SCNNode(geometry: SCNSphere(radius: 0.05))
+         sphere = SCNNode(geometry: SCNSphere(radius: 0.05))
         let sphere2 = SCNNode(geometry: SCNSphere(radius: 0.10))
         sphere.geometry?.firstMaterial?.diffuse.contents = UIImage(named:"earthmap")
         sphere.position = SCNVector3(0,0,0)
@@ -69,6 +71,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let rotateForeverAction = SCNAction.repeatForever(rotateAction)
         sphere.runAction(rotateForeverAction)
         //sceneView.scene.rootNode.addChildNode(sphere2)
+    }
+    
+    func drawOrbitingShip() {
+        let scene = SCNScene(named: "art.scnassets/ship.scn")!
+        let ship = (scene.rootNode.childNode(withName:"ship", recursively: false))!
+        ship.position = SCNVector3(1,0,0)
+        ship.scale = SCNVector3(0.3,0.3,0.3)
+        ship.eulerAngles = SCNVector3(0, 180.degreesToRadians(), 0)
+        sphere.addChildNode(ship)
     }
     
     func drawBoxAt12oclockHigh() {
